@@ -110,3 +110,20 @@ Tipos de dados do Sequelize:
 Migrações e seeds:
 - <a href="https://sequelize.org/docs/v6/other-topics/migrations/#running-migrations">Documentação do sequelize sobre migrações</a>
 - <a href="https://sequelize.org/docs/v6/other-topics/migrations/#creating-the-first-seed">Documentação do sequelize sobre seeds</a>
+
+## Soft-Delete
+
+O recurso Soft-Delete ou Exclusão Suave é bem simples: significa que ao invés de excluir os registros do banco de dados, nós vamos somente 'marcar' os registros como excluidos. Para fazer isso geralmente usamos uma coluna chamada isDeleted que recebe o valor `true` para indicar que o registro foi marcado para exclusão. No sequelize existe uma forma de trabalhar com ela, e é chamado de `paranoid`.
+
+No modelo onde queremos implementar essa funcionalidade, adicionaremos no segundo parâmetro um `paranoid: true`. Como no exemplo abaixo:
+
+```javascript
+class Post extends Model {}
+Post.init({ /* atributos aqui */ }, {
+  sequelize,
+  paranoid: true,
+});
+```
+
+- <a href="https://sequelize.org/docs/v6/core-concepts/paranoid/">Documentação do sequelize sobre paranoid.</a>
+

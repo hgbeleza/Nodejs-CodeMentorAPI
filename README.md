@@ -127,3 +127,26 @@ Post.init({ /* atributos aqui */ }, {
 
 - <a href="https://sequelize.org/docs/v6/core-concepts/paranoid/">Documentação do sequelize sobre paranoid.</a>
 
+## Default Scope
+
+Quando falamos de programação, existem diversos tipos de escopo. Por exemplo, em JavaScript podemos definir o escopo de uma variável - escopo global, de uma função etc. O escopo é como chamamos as regras que definem quão acessível ou “visível” uma informação (por exemplo, uma variável) está, dependendo da parte da aplicação. Um escopo pode ter identificadores, alguma instrução de código ou algoritmo.
+
+No caso do Sequelize, podemos determinar o escopo padrão (defaultScope) que justamente define quais restrições e definições serão utilizadas na query por padrão (default). Além do escopo padrão podemos definir outros, enquanto fizer sentido para a aplicação, e dar a cada escopo um nome que será usado pelo Sequelize para identificá-lo.
+
+Com isso é possível reutilizar código, definindo escopos para queries mais utilizadas e refinando estas queries através de palavras-chave como where, include etc.
+
+```javascript
+class Project extends Model {}
+Project.init({
+  // Atributos
+}, {
+  // Definindo scope
+  defaultScope: {
+    where: {
+      active: true
+    }
+  },
+});
+```
+
+- <a href="https://sequelize.org/docs/v6/other-topics/scopes/">Documentação do sequelize sobre scopes</a>

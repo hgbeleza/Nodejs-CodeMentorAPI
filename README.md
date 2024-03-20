@@ -70,3 +70,43 @@ Isso é importante, porque é muito comum trabalharmos com nomes específicos da
 Portanto, para todo modelo que criar, associe um nome de tabela e deixe o nome dessa tabela explícito. Além disso, o Sequelize, automaticamente, tenta pluralizar as palavras, colocando um "S" no final, mas sabe fazer isso somente em inglês, não em português.
 
 - <a href="https://sequelize.org/docs/v6/core-concepts/model-basics/#model-definition">Documentação sobre criação de modelos</a>
+
+## Migrando para o banco de dados
+
+Junto ao modelo, também foi criado um arquivo na pasta "migrations" com uma nomeclatura que, no inicío tem uma sequência numérica e depois o nome do modelo. EX: `20230905181600-create-modelo.js`. A sequência numérica ao início do nome representa a data e hora atuais.
+
+Esse arquivo é basicamente um objeto contendo dois métodos importados diretamente pelo módulo. Os métodos são: `async up()` e `async down()`.
+
+```javascript
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Modelos', {
+      // Propriedades
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Modelos');
+  }
+};
+```
+
+E, em primeiro lugar, no escopo, é chamado o método `createTable()`. O primeiro parâmetro do método `createTable()` é uma string em que o Sequelize adicionou automaticamente `Modelos` com "M" maiúsculo e "s" no final. Altere o nome da string para o padrão de nomeclatura do SQL. Ex: `modelos`.
+
+O segundo método é o `down()`, que chama internamente o método `dropTable()`. Se você já teve a oportunidade de trabalhar com SQL, sabe que `DROP` é o comando para destruir uma tabela ou um banco inteiro. Portanto, se executarmos esse método, ele destruirá uma tabela. Altere o nome da string para o padrão de nomeclatura do SQL. Ex: `modelos`.
+
+### Enviando alterações para o banco de dados
+
+Nossa migração foi criada automaticamente e agora temos que passar essas alterações para o banco. Vamos executar essa migração no terminal.
+
+O comando para rodar a migração é o seguinte: <br/>
+`npx sequelize-cli db:migrate`
+
+Tipos de dados do Sequelize:
+- <a href="https://sequelize.org/docs/v6/core-concepts/model-basics/#data-types">Lista de tipos de dados do sequelize</a>
+- <a href="https://sequelize.org/docs/v6/other-topics/other-data-types/">Data types específicos</a>
+
+Migrações e seeds:
+- <a href="https://sequelize.org/docs/v6/other-topics/migrations/#running-migrations">Documentação do sequelize sobre migrações</a>
+- <a href="https://sequelize.org/docs/v6/other-topics/migrations/#creating-the-first-seed">Documentação do sequelize sobre seeds</a>

@@ -22,7 +22,7 @@ Antes de executar qualquer comando do sequelize-cli, crie no diretório raiz do 
 const path = require("path");
 
 module.exports = {
-  "config": path.resolve("./src/config", "config.json"),
+  config: path.resolve("./src/config", "config.json"),
   "models-path": path.resolve("./src/models"),
   "seeders-path": path.resolve("./src/seeders"),
   "migrations-path": path.resolve("./src/migrations"),
@@ -34,3 +34,39 @@ Execute o comando pra iniciar o sequelize: `npx sequelize-cli init`. Dentro da p
 - <a target="_blank" href="https://www.alura.com.br/artigos/dotenv-gerenciando-variaveis-ambiente?_gl=1*z5oqd*_ga*MTMyNjk1NDcyNi4xNzA4NzA2MjY3*_ga_1EPWSW3PCS*MTcxMDk0NTExNC45LjEuMTcxMDk0OTY0OS4wLjAuMA..*_fplc*emxCU1llNEQxUzdUQ1ZSNUtTaUxFSkhXQjdObEYzVm1SeTZDY01xQ2FVWFdTcU82Q3dmN09QR3Y0NmRzJTJGVTElMkZrZzRoc2psOVpENlBnRXZ6SXlnN2NISVZYY2xON1p1JTJCWXFUdUVNQ2duT2dDT242N0tVVG5acHhiaUFCZjVRJTNEJTNE">Como utilizar variáveis de ambiente em JavaScript</a>
 - <a href="https://sequelize.org/docs/v6/getting-started/#installing">Lista de banco de dados compatíveis com sequelize</a>
 - <a href="https://alura.com.br/artigos/sql-injection-proteja-sua-aplicacao?_gl=1*1dzkyvn*_ga*MTMyNjk1NDcyNi4xNzA4NzA2MjY3*_ga_1EPWSW3PCS*MTcxMDk0NTExNC45LjEuMTcxMDk1MDI3NS4wLjAuMA..*_fplc*emxCU1llNEQxUzdUQ1ZSNUtTaUxFSkhXQjdObEYzVm1SeTZDY01xQ2FVWFdTcU82Q3dmN09QR3Y0NmRzJTJGVTElMkZrZzRoc2psOVpENlBnRXZ6SXlnN2NISVZYY2xON1p1JTJCWXFUdUVNQ2duT2dDT242N0tVVG5acHhiaUFCZjVRJTNEJTNE">SQL injection</a>: entenda uma das falhas de segurança mais comuns e que é tratado internamente por ORMs como Sequelize;
+
+## Criando model com sequelize-cli
+
+Para criar models com sequelize-cli, usamos o comando: <br/>
+`npx sequelize-cli model:generate --name TableName --attributes arg1:string,arg2:string,arg3:string`.
+
+A _flag_ `--name` será o nome do modelo que vamos gerar. A outra _flag_ `--attributes`, serve para listar as propriedades que o modelo terá.
+
+## Nomeclaturas
+
+Outro aspecto importante sobre o SQL, um daqueles conhecimentos que todos precisam ter mesmo usando o ORM, é a questão das nomenclaturas.
+
+Existem alguns padrões para nomear tabelas e colunas em SQL. Um dos mais básicos é nomear as tabelas todas em minúsculo e no plural. Por exemplo: uma tabela de pessoas nomeada como "pessoas", da mesma forma como teríamos a tabela "carros" e a tabela "animais".
+
+Além disso, um padrão muito comum no SQL é o uso do underline (\_) para separar termos. Os nomes em JavaScript são normalmente separados com camel case, o que pode gerar um problema na hora do Sequelize identificar os nomes das tabelas e relacionar o nome da tabela com o nome do modelo.
+
+Para esse comportamento ser evitado, dentro do modelo que foi criado, no método `Modelo.init()`, há um parâmetro que é um objeto com `modelName`. Vamos incluir outra propriedade chamada `tableName`. Para ela vamos usar o nome da tabela em minúscula e em plural.
+
+```javascript
+Modelo.init(
+  {
+    // propriedades
+  },
+  {
+    sequelize,
+    modelName: "Modelo",
+    tableName: "modelos",
+  }
+);
+```
+
+Isso é importante, porque é muito comum trabalharmos com nomes específicos das tabelas do banco de dados, e precisamos entender onde o Sequelize chama os nomes dos modelos e onde ele se refere às tabelas relacionadas a esses modelos, o que é muitas vezes fonte de bug no Sequelize.
+
+Portanto, para todo modelo que criar, associe um nome de tabela e deixe o nome dessa tabela explícito. Além disso, o Sequelize, automaticamente, tenta pluralizar as palavras, colocando um "S" no final, mas sabe fazer isso somente em inglês, não em português.
+
+- <a href="https://sequelize.org/docs/v6/core-concepts/model-basics/#model-definition">Documentação sobre criação de modelos</a>

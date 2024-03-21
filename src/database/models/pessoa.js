@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         ativo: true
       }
     },
+    scopes: {
+      todosOsRegistros: {
+        
+      }
+    },
   });
   return Pessoa;
 };
